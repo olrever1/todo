@@ -4,27 +4,42 @@
         <span class="addContainer" v-on:click="addTodo">
             <i class="fas fa-plus addBtn"></i>
         </span>
+        <Modal v-if="showModal" @close="showModal = false">
+            <h3 slot="header">경고!</h3>
+            <div slot="body">빈 칸은 등록되지 않습니다.</div>
+            <div slot="footer">
+                <i class="fas fa-times" @click="showModal=false"></i>
+                <!-- <button class="modal-default-button" @click="showModal=false"> -->
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script>
+import Modal from './common/Modal.vue'
+
 export default {
     data: function() {
         return{
-            newTodoItem: ""
+            newTodoItem: "",
+            showModal: false
         }
     },
     methods: {
         addTodo: function() {
             if(this.newTodoItem !== ''){
-                var obj = {completed: false, item: this.newTodoItem};
-                localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
+                this.$emit('addTodoItem', this.newTodoItem)
                 this.clearInput();
+            } else {
+                this.showModal = !this.showModal;
             }
         },
         clearInput: function() {
             this.newTodoItem = '';
         }
+    },
+    components: {
+        Modal: Modal
     }
 }
 </script>
